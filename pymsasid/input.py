@@ -110,6 +110,22 @@ class PEFileHook(BufferHook):
         self.seek(self.base_address + self.pe.OPTIONAL_HEADER.AddressOfEntryPoint)
 
 
+class ELFFileHook(BufferHook):
+    def __init__(self, source, base_address):
+        BufferHook.__init__(self, source, base_address)
+        from elftools.elf.elffile import ELFFile
+        with open(source) as f:
+            self.elf = ELFFile(f)
+
+            text_segment = self.elf.get_section_by_name(".text")
+            self.source = text_segment.data()
+            self.entry_point = self.elf.header.e_entry
+
+            # set the seek to point to program entry point
+            offset = text_segment["sh_addr"]
+            self.seek(self.entry_point - offset)
+
+
 class HexstringHook(Hook):
     """Hook for hex string inputs."""
     def __init__(self, source, base_address = 0):
