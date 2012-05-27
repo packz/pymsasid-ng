@@ -118,12 +118,14 @@ class ELFFileHook(BufferHook):
             self.elf = ELFFile(f)
 
             text_segment = self.elf.get_section_by_name(".text")
+            text_segment_addr = text_segment["sh_addr"]
+            self.base_address = text_segment_addr
+            text_segment_size = text_segment["sh_size"]
             self.source = text_segment.data()
             self.entry_point = self.elf.header.e_entry
 
             # set the seek to point to program entry point
-            offset = text_segment["sh_addr"]
-            self.seek(self.entry_point - offset)
+            self.seek(self.entry_point)
 
 
 class HexstringHook(Hook):
