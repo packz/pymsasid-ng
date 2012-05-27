@@ -45,8 +45,11 @@ class Pymsasid:
 
 
     def decode(self):
-        inst = dec.decode(self)
-        self.pc += inst.size
+        while True:
+            inst = dec.decode(self)
+            if inst.operator == "invalid":
+                return
+            self.pc += inst.size
 
-        return inst
+            yield inst
 
