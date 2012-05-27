@@ -159,7 +159,7 @@ class Inst:
         return [self.next_add()]
 
     def next_add(self):
-        return long(self.pc)
+        return long(self.pc + self.size)
         
     def target_add(self):
         if(self.operand[0].type == 'OP_JIMM' 
