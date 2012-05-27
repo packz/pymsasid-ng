@@ -45,4 +45,8 @@ class Pymsasid:
 
 
     def decode(self):
-        return dec.decode(self)
+        inst = dec.decode(self)
+        self.pc += inst.size
+
+        return inst
+

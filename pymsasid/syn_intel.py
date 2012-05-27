@@ -22,7 +22,7 @@ def intel_operand_cast(op):
         raise KeyError('Unknown operand size: %s' % str(op.size))
 
 
-def intel_operand_syntax(op):
+def intel_operand_syntax(inst, op):
     """Generates assembly output for operands."""
 
     ret = list()
@@ -74,7 +74,10 @@ def intel_operand_syntax(op):
         ret.append(hex(op.lval))
 
     elif op.type == 'OP_JIMM':
-        ret.append(hex(op.pc + op.lval))
+        """for PC-relative addressing, the PC value used
+            is the address of the next instruction
+        """
+        ret.append(hex(op.pc + op.lval + inst.size))
 
     elif op.type == 'OP_PTR':
         ret.extend(['word ', hex(op.lval.seg), ':', hex(op.lval.off)])
@@ -124,7 +127,7 @@ def intel_syntax(self):
     # print the operands
     operands = list()
     for op in self.operand:
-        operands.append(intel_operand_syntax(op))
+        operands.append(intel_operand_syntax(self, op))
 
     ret.append(', '.join(operands))
 

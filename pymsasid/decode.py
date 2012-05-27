@@ -922,5 +922,5 @@ def decode(self):
         inst.clear()
     inst.size = self.input.ctr + 1
     inst.raw = self.input.buffer[0:inst.size]
-    inst.set_pc(inst.add + inst.size)
+    inst.set_pc(inst.add)
     return inst
