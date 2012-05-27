@@ -49,7 +49,7 @@ class Pymsasid:
             inst = dec.decode(self)
             if inst.operator == "invalid":
                 return
-            self.pc += inst.size
+            self.seek(inst.branch()[0])
 
             yield inst
 
